@@ -1,0 +1,7 @@
+---
+- name: Install and configure Java locally
+  hosts: localhost
+  connection: local
+  become: true
+  roles:
+    - install_java

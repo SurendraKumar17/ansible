@@ -1,0 +1,29 @@
+---
+- name: Install Java
+  ansible.builtin.apt:
+    name: "{{ java_package }}"
+    state: present
+    update_cache: true
+
+- name: Deploy JAVA_HOME config from template
+  ansible.builtin.template:
+    src: java.sh.j2
+    dest: /etc/profile.d/java.sh
+    owner: root
+    mode: "0644"
+  notify: Reload environment config
+
+- name: Enable strict mode flag file
+  ansible.builtin.file:
+    path: /etc/java-strict-mode.flag
+    state: touch
+  when: enable_strict_mode | bool
+
+- name: Verify Java is actually usable
+  ansible.builtin.command: java -version
+  register: java_version_output
+  changed_when: false
+
+- name: Show installed Java version
+  ansible.builtin.debug:
+    msg: "{{ java_version_output.stderr }}"

@@ -1,0 +1,4 @@
+---
+- name: Reload environment config
+  ansible.builtin.command: bash -c "source /etc/profile.d/java.sh"
+  changed_when: false
